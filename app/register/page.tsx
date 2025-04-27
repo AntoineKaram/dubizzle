@@ -13,7 +13,7 @@ export default async function RegisterPage() {
 
   return (
     <PageWrapper>
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
+      <div className=" max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
         <h1 className="text-4xl font-bold text-center text-gray-900">
           Create your Dubizzle account
         </h1>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useState } from "react";
+import { Fragment, useCallback, useMemo, useRef, useState } from "react";
 import dayjs from "dayjs";
 import Image from "next/image";
 import { signOut } from "next-auth/react";
@@ -11,8 +11,14 @@ import Button from "@/components/ui/Button";
 import MyAds from "./MyAds";
 import EditProfileForm from "./EditProfileForm";
 
-export default function ProfileContent({ user }: { user: User }) {
+export default function ProfileContent({ user: dbUser }: { user: User }) {
+  const userRef = useRef(dbUser);
   const [editMode, setEditMode] = useState(false);
+
+  const onComplete = useCallback((user: User) => {
+    userRef.current = user;
+    setEditMode((prev) => !prev);
+  }, []);
 
   return (
     <div className="w-full max-w-6xl min-h-[60vh] mx-auto p-6 flex flex-col md:flex-row gap-10 bg-white rounded-lg shadow-md">
@@ -21,28 +27,32 @@ export default function ProfileContent({ user }: { user: User }) {
           <Fragment>
             <div className="relative w-32 h-32">
               <Image
-                src={user.profilePic || "/default-profile.png"}
+                src={userRef.current.profilePic || "/default-profile.png"}
                 alt="Profile Picture"
                 fill
                 className="object-cover rounded-full border-4 border-red-600"
               />
             </div>
             <div className="text-center md:text-left space-y-1">
-              <h1 className="text-3xl font-bold text-gray-900">{user.name}</h1>
-              <p className="text-gray-500">{user.email}</p>
+              <h1 className="text-3xl font-bold text-gray-900">
+                {userRef.current.name}
+              </h1>
+              <p className="text-gray-500">{userRef.current.email}</p>
               <p className="text-gray-500">
-                {user.address || "No address provided yet."}
+                {userRef.current.address || "No address provided yet."}
               </p>
             </div>
             <div className="space-y-1 text-sm text-gray-500 text-center md:text-left">
               <p>
-                <span className="font-semibold">Created:</span>{" "}
-                {dayjs(user.createdAt).format("DD MMM YYYY, HH:mm")}
+                <span className="font-semibold">Created: </span>
+                {dayjs(userRef.current.createdAt).format("DD MMM YYYY, HH:mm")}
               </p>
-              {user.modifiedAt && (
+              {userRef.current.modifiedAt && (
                 <p>
-                  <span className="font-semibold">Last Modified:</span>{" "}
-                  {dayjs(user.modifiedAt).format("DD MMM YYYY, HH:mm")}
+                  <span className="font-semibold">Last Modified: </span>
+                  {dayjs(userRef.current.modifiedAt).format(
+                    "DD MMM YYYY, HH:mm"
+                  )}
                 </p>
               )}
             </div>
@@ -64,10 +74,10 @@ export default function ProfileContent({ user }: { user: User }) {
             </div>
           </Fragment>
         ) : (
-          <EditProfileForm user={user} onCancel={() => setEditMode(false)} />
+          <EditProfileForm user={userRef.current} onComplete={onComplete} />
         )}
       </div>
-      <MyAds ads={user.ads} />
+      <MyAds ads={userRef.current.ads} />
     </div>
   );
 }

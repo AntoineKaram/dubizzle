@@ -24,7 +24,7 @@ const RegisterForm: React.FC = () => {
     setLoading(true);
 
     const name = nameRef.current?.value.trim() || "";
-    const email = emailRef.current?.value.trim() || "";
+    const email = emailRef.current?.value.toLowerCase().trim() || "";
     const password = passwordRef.current?.value || "";
 
     if (!name || !email || !password) {
@@ -60,7 +60,7 @@ const RegisterForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 animate-fade-in">
+    <form onSubmit={handleSubmit} className="space-y-4 animate-fade-in-scale">
       <Input ref={nameRef} type="text" placeholder="Name" required />
       <Input ref={emailRef} type="email" placeholder="Email" required />
       <Input

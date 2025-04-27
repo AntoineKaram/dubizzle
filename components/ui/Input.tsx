@@ -9,7 +9,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <input
         ref={ref}
-        className={`w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 transition ${className}`}
+        className={`w-full p-3 border border-gray-300 rounded-md transition ${className}`}
         {...props}
       />
     );

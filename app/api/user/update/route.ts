@@ -14,31 +14,17 @@ export async function PUT(req: Request) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const formData = await req.formData();
-    const name = formData.get("name") as string;
-    const address = formData.get("address") as string;
-    const profilePic = formData.get("profilePic") as File | null;
-
-    let profilePicUrl: string | undefined;
-
-    if (profilePic && profilePic.size > 0) {
-      const buffer = Buffer.from(await profilePic.arrayBuffer());
-      const extension = path.extname(profilePic.name); 
-      const filename = `${uuidv4()}${extension}`;
-
-      const filePath = path.join(process.cwd(), "public/uploads", filename);
-
-      await writeFile(filePath, buffer);
-
-      profilePicUrl = `/uploads/${filename}`;
-    }
+    const formData = await req.json();
+    const name = formData.name;
+    const address = formData.address;
+    const profilePic = formData.profilePic;
 
     await prisma.user.update({
       where: { id: user.id },
       data: {
         name,
         address,
-        profilePic: profilePicUrl || undefined,
+        profilePic: profilePic,
         modifiedBy: user.id,
       },
     });

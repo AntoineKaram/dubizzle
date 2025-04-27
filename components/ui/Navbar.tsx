@@ -7,7 +7,7 @@ export default function Navbar() {
   const { data: session } = useSession()
 
   return (
-    <nav className="w-full bg-white shadow-sm p-4 flex justify-between items-center">
+    <nav className="w-full bg-white shadow-sm p-4 flex justify-between items-center ">
       <Link href="/" className="text-2xl font-bold text-red-600">
         Dubizzle Demo
       </Link>

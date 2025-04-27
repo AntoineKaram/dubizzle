@@ -45,7 +45,7 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 animate-fade-in">
+    <form onSubmit={handleSubmit} className="space-y-4 animate-fade-in-scale">
       <Input ref={emailRef} type="email" placeholder="Email" required />
       <Input
         ref={passwordRef}

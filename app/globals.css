@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+@import "uploadthing/tw/v4";
 @theme {
   --color-app: #f1f5f9;
   --animate-fade-in-scale: fade-in-scale 0.3s ease-out;

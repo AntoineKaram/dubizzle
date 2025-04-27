@@ -1,66 +1,69 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { User } from "@/lib/models";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import { api } from "@/lib/axios";
-import Image from "next/image";
+import { UploadButton } from "@/components/uploadthing";
 
 export default function EditProfileForm({
   user,
-  onCancel,
+  onComplete,
 }: {
   user: User;
-  onCancel: () => void;
+  onComplete: (user: User) => void;
 }) {
-  const router = useRouter();
-  const nameRef = useRef<HTMLInputElement>(null);
-  const addressRef = useRef<HTMLTextAreaElement>(null);
-  const profilePicRef = useRef<HTMLInputElement>(null);
-
-  const [preview, setPreview] = useState<string | null>(
+  const [profilePicUrl, setProfilePicUrl] = useState<string | null>(
     user.profilePic || null
   );
+  const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-
-  const handleImageChange = () => {
-    const file = profilePicRef.current?.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setSuccess(false);
-    setLoading(true);
 
-    const name = nameRef.current?.value.trim() || "";
-    const address = addressRef.current?.value.trim() || "";
-    const profilePicFile = profilePicRef.current?.files?.[0];
+    const name = (e.target as any).name.value.trim();
+    const address = (e.target as any).address.value.trim();
 
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("address", address);
-    if (profilePicFile) {
-      formData.append("profilePic", profilePicFile);
+    if (!name) {
+      setError("Name is required.");
+      return;
+    }
+    if (name.length < 2) {
+      setError("Name must be at least 2 characters.");
+      return;
+    }
+    if (name.length > 50) {
+      setError("Name must be less than 50 characters.");
+      return;
+    }
+    if (address.length > 200) {
+      setError("Address must be less than 200 characters.");
+      return;
     }
 
+    setLoading(true);
+
+    const updatedUser = user;
+    updatedUser.name = name;
+    updatedUser.address = address;
+    updatedUser.profilePic = profilePicUrl ?? undefined;
+
     try {
-      await api.put("/api/user/update", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const body = {
+        name,
+        address,
+        profilePic: profilePicUrl,
+      };
+      await api.put("/api/user/update", body);
+
       setSuccess(true);
-      setTimeout(() => router.refresh(), 1000);
+      onComplete(updatedUser);
     } catch (err: any) {
       setError(err.response?.data?.message || "Something went wrong");
     } finally {
@@ -70,38 +73,53 @@ export default function EditProfileForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 w-full animate-fade-in">
-      <div className="relative w-32 h-32 mx-auto">
-        <Image
-          src={preview || "/default-profile.png"}
-          alt="Profile Preview"
-          fill
-          className="object-cover rounded-full border-4 border-red-600"
+      <div className="relative w-32 h-32">
+        <img
+          src={profilePicUrl || "/default-profile.png"}
+          alt="Profile Picture"
+          className="object-cover rounded-full border-4 border-red-600 w-full h-full"
         />
-      </div>
 
+        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 opacity-0 hover:opacity-100 transition rounded-full">
+          <UploadButton
+            endpoint="profileImage"
+            onClientUploadComplete={(res) => {
+              if (res && res.length > 0) {
+                setProfilePicUrl(res[0].ufsUrl);
+              }
+              setUploading(false);
+            }}
+            onUploadBegin={() => setUploading(true)}
+            onUploadError={(error) => {
+              setError(error.message);
+            }}
+            className="
+            ut-button:bg-transparent 
+            ut-button:text-transparent 
+            ut-button:border-none 
+            ut-label:hidden 
+            ut-allowed-content:hidden 
+            ut-uploading:hidden 
+            cursor-pointer 
+            absolute inset-0
+          "
+          />
+        </div>
+      </div>
       <Input
-        ref={nameRef}
+        name="name"
         defaultValue={user.name}
         type="text"
         placeholder="Name"
         required
       />
       <textarea
-        ref={addressRef}
+        name="address"
         defaultValue={user.address || ""}
         placeholder="Address"
         rows={3}
-        className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 transition"
-      ></textarea>
-
-      <Input
-        ref={profilePicRef}
-        type="file"
-        accept="image/*"
-        onChange={handleImageChange}
-        className="w-full p-3 border border-gray-300 rounded-md"
+        className="w-full p-3 border border-gray-300 rounded-md transition"
       />
-
       {error && (
         <p className="text-sm text-center text-red-500 animate-fade-in">
           {error}
@@ -113,11 +131,15 @@ export default function EditProfileForm({
         </p>
       )}
       <div className="flex gap-2 mt-4">
-        <Button type="submit" loading={loading} variant="primary">
-          {loading ? "Saving..." : "Save Changes"}
+        <Button type="submit" loading={loading || uploading} variant="primary">
+          {loading ? "Saving..." : uploading ? "Uploading..." : "Save Changes"}
         </Button>
 
-        <Button variant="secondary" type="button" onClick={onCancel}>
+        <Button
+          variant="secondary"
+          type="button"
+          onClick={() => onComplete(user)}
+        >
           Cancel
         </Button>
       </div>
