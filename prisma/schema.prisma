@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String    @id @default(uuid())
+  email      String    @unique
+  password   String
+  name       String
+  address    String?
+  profilePic String?
+  role       Role      @default(USER)
+  ads        Ad[]
+  createdAt  DateTime  @default(now())
+  createdBy  String?
+  modifiedAt DateTime? @updatedAt
+  modifiedBy String?
+}
+
+model Ad {
+  id              String    @id @default(uuid())
+  title           String
+  description     String
+  locationCity    String
+  locationCountry String
+  price           Float
+  category        String
+  subcategory     String
+  status          AdStatus  @default(PENDING)
+  rejectionReason String?
+  sellerId        String
+  seller          User      @relation(fields: [sellerId], references: [id])
+  createdAt       DateTime  @default(now())
+  createdBy       String
+  modifiedAt      DateTime? @updatedAt
+  modifiedBy      String?
+}
+
+enum Role {
+  USER
+  MODERATOR
+}
+
+enum AdStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
