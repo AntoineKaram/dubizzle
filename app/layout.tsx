@@ -1,7 +1,8 @@
 import React from "react";
 
 import Navbar from "@/components/ui/Navbar";
-import { SessionProvider } from "@/components/SessionPtovider";
+import GlobalInitializer from "./GlobalInitializer";
+import SessionProvider from "@/components/SessionProvider";
 
 import "./globals.css";
 
@@ -19,6 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <SessionProvider>
+          <GlobalInitializer />
           <Navbar />
           {children}
         </SessionProvider>

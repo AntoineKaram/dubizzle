@@ -8,6 +8,12 @@ export const fileRouter = {
   .onUploadComplete(async ({ metadata, file }) => {
     console.log("Upload complete, file URL:", file.ufsUrl);
   }),
+  adImages: f({
+    image: { maxFileSize: "4MB", maxFileCount: 5 },
+  })
+  .onUploadComplete(async ({ metadata, file }) => {
+    console.log("Upload complete, file URL:", file.ufsUrl);
+  }),
 } satisfies FileRouter;
 
 export type CustomFileRouter = typeof fileRouter;

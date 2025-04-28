@@ -15,11 +15,11 @@ export default async function HomePage() {
         {user ? (
           <>
             <p className="text-gray-600 text-lg">
-              Welcome back, {user.name} 👋
+              Welcome, {user.name} 👋
             </p>
             <div className="flex gap-4 justify-center mt-6">
               <Button href="/profile">Go to Profile</Button>
-              <Button href="/ads/create" variant="secondary">
+              <Button href="/ads/new" variant="secondary">
                 Post an Ad
               </Button>
             </div>
