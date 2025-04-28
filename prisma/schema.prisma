@@ -22,23 +22,36 @@ model User {
   modifiedBy String?
 }
 
+model Category {
+  id            String        @id @default(uuid())
+  name          String        @unique
+  subcategories Subcategory[]
+}
+
+model Subcategory {
+  id         String   @id @default(uuid())
+  name       String
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+  ads        Ad[]
+}
+
 model Ad {
-  id              String    @id @default(uuid())
-  title           String
-  description     String
-  locationCity    String
-  locationCountry String
-  price           Float
-  category        String
-  subcategory     String
-  status          AdStatus  @default(PENDING)
-  rejectionReason String?
-  sellerId        String
-  seller          User      @relation(fields: [sellerId], references: [id])
-  createdAt       DateTime  @default(now())
-  createdBy       String
-  modifiedAt      DateTime? @updatedAt
-  modifiedBy      String?
+  id            String      @id @default(uuid())
+  title         String
+  description   String
+  price         Float
+  location      String
+  images        String[]    @default([])
+  status        AdStatus    @default(PENDING)
+  createdAt     DateTime    @default(now())
+  createdBy     String
+  user          User        @relation(fields: [createdBy], references: [id])
+  paymentOption String
+  subcategoryId String
+  subcategory   Subcategory @relation(fields: [subcategoryId], references: [id])
+
+  @@index([createdBy])
 }
 
 enum Role {

@@ -20,8 +20,20 @@ type Ad = {
   createdAt: Date;
 };
 
+type Subcategory = {
+  id: string;
+  name: string;
+  categoryId: string;
+};
+
+type Category = {
+  id: string;
+  name: string;
+  subcategories: Subcategory[];
+};
+
 enum Role {
   USER = "USER",
   MODERATOR = "MODERATOR",
 }
-export type { User, Role, Ad };
+export type { User, Role, Ad, Subcategory, Category };

@@ -1,4 +1,4 @@
-# Dubizzle - Classifieds Platform
+# Dubizzle - Platform
 
 A full-stack classifieds web application built with **Next.js**, **PostgreSQL**, and **Prisma**.  
 Developed as part of the Dubizzle Lebanon **Senior Full Stack Developer Assessment**.
@@ -7,52 +7,67 @@ Developed as part of the Dubizzle Lebanon **Senior Full Stack Developer Assessme
 
 ## 🚀 Features
 
-- User **Registration**, **Login**, and **Logout**
-- **Ad Management**: Create and Edit Ads
-- **Moderation Workflow**:
-  - Ads must be approved by moderators before going live
-  - Rejection reasons are communicated to the user
-  - Previous approved versions remain live during edits
-- **Responsive** homepage showcasing all approved ads
-- Secure **authentication** and **role-based access** (User / Moderator)
+- User Authentication (NextAuth, secure password hashing)
+- Profile Management
+  - Edit name, address, and profile picture
+  - Upload profile images to external blob storage (UploadThing)
+- Post New Ad (Coming soon)
+  - Title, Description, Price, Images
+- Animated Lottie Background for modern UX
+- Responsive UI with TailwindCSS
+- Server-side Validation and Client-side Validation
+- Fully deployed on Vercel
 
 ---
 
 ## 🛠 Tech Stack
 
-- **Frontend**: [Next.js](https://nextjs.org/), [TailwindCSS](https://tailwindcss.com/)
-- **Backend**: [Next.js API Routes](https://nextjs.org/docs/api-routes/introduction)
-- **Database**: [PostgreSQL](https://www.postgresql.org/) with [Prisma ORM](https://www.prisma.io/)
-- **Authentication**: [NextAuth.js](https://next-auth.js.org/)
+- **Frontend:** Next.js 14 (App Router), TailwindCSS
+- **Backend:** Next.js API Routes, Prisma ORM
+- **Authentication:** NextAuth.js
+- **Storage:** UploadThing (Blob Storage for images)
+- **Database:** PostgreSQL (via Railway or Neon)
+- **Deployment:** Vercel
 
 ---
 
 ## 📦 Setup Instructions
 
 1. **Clone the repository**
-  ```bash
-  git clone https://github.com/your-username/dubizzle.git
-  cd dubizzle
-  ```
-   
+
+```bash
+git clone https://github.com/your-username/dubizzle.git
+cd dubizzle
+```
+
 2. **Install dependencies**
-  ```bash
-  npm install
-  ```
+
+```bash
+npm install
+```
 
 3. **Setup environment variables**
-Create a .env file based on .env.example:
-  ```env
-  DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/dubizzle"
-  NEXTAUTH_SECRET="your-random-nextauth-secret"
-  ```
+   Create a .env file based on .env.example:
+
+```env
+# Database
+DATABASE_URL=your_postgres_db_url
+
+# NextAuth
+NEXTAUTH_SECRET=your_random_secret
+
+# UploadThing
+UPLOADTHING_TOKEN=your_uploadthing_secret
+```
 
 4. **Run Prisma migrations**
-  ```bash
-  npx prisma migrate dev --name init
-  ```
+
+```bash
+npx prisma migrate dev --name init
+```
 
 5. **Start the development server**
-  ```bash
-  npm run dev
-  ```
+
+```bash
+npm run dev
+```
