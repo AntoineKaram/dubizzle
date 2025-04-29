@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { Role, User } from "./models";
 import { prisma } from "./prisma";
 import { comparePassword } from "./hash";
+import { mapApiAdsToLightAds } from "./mapper";
 
 export const getCurrentUser = async () => {
   const session = await getServerSession(authOptions);
@@ -45,13 +46,14 @@ export async function getEnrichedUser(): Promise<User | null> {
           price: true,
           status: true,
           createdAt: true,
+          images: true,
         },
       },
     },
   });
 
   if (!dbUser) return null;
-
+  const userAds = mapApiAdsToLightAds(dbUser.ads);
   return {
     id: dbUser.id,
     name: dbUser.name,
@@ -63,7 +65,7 @@ export async function getEnrichedUser(): Promise<User | null> {
     createdBy: dbUser.createdBy ?? undefined,
     modifiedAt: dbUser.modifiedAt ?? undefined,
     modifiedBy: dbUser.modifiedBy ?? undefined,
-    ads: dbUser.ads ?? [],
+    ads: userAds,
   };
 }
 

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+import { GoogleMap, Marker } from "@react-google-maps/api";
 import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
@@ -9,6 +9,7 @@ import PlacesAutocomplete, {
 
 interface LocationPickerProps {
   value: string;
+  defaultValue?: string;
   onChange: (addr: string) => void;
   onCoordsChange?: (coords: { lat: number; lng: number }) => void;
   error?: string;
@@ -16,6 +17,7 @@ interface LocationPickerProps {
 
 export const LocationPicker: React.FC<LocationPickerProps> = ({
   value,
+  defaultValue,
   onChange,
   onCoordsChange,
   error,
@@ -25,15 +27,19 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
   );
 
   useEffect(() => {
-    navigator.geolocation?.getCurrentPosition((pos) => {
-      const { latitude, longitude } = pos.coords;
-      setDetected({ lat: latitude, lng: longitude });
-      if (onCoordsChange) onCoordsChange({ lat: latitude, lng: longitude });
-    });
+    if (!defaultValue)
+      navigator.geolocation?.getCurrentPosition((pos) => {
+        const { latitude, longitude } = pos.coords;
+        setDetected({ lat: latitude, lng: longitude });
+        if (onCoordsChange) onCoordsChange({ lat: latitude, lng: longitude });
+      });
   }, [onCoordsChange]);
 
   const handleSelect = async (addr: string) => {
     onChange(addr);
+    await setCoordinatesFromAddress(addr);
+  };
+  const setCoordinatesFromAddress = async (addr: string) => {
     const results = await geocodeByAddress(addr);
     const ll = await getLatLng(results[0]);
     setDetected(ll);
@@ -42,79 +48,69 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
 
   return (
     <div className="space-y-2">
-      <LoadScript
-        googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
-        libraries={["places"]}
+      <PlacesAutocomplete
+        value={value ?? defaultValue}
+        onChange={onChange}
+        onSelect={(address) => handleSelect(address)}
       >
-        <PlacesAutocomplete
-          value={value}
-          onChange={onChange}
-          onSelect={(address) => handleSelect(address)}
-        >
-          {({
-            getInputProps,
-            suggestions,
-            getSuggestionItemProps,
-            loading,
-          }) => (
-            <div className="space-y-1">
-              <input
-                {...getInputProps({
-                  placeholder: "Enter location",
-                  className: `w-full p-3 border rounded-md focus:outline-none transition border-gray-300 ${
-                    error ? "border-red-500" : "border-gray-300"
-                  }`,
-                })}
-              />
-              <div
-                className={`bg-white rounded-md ${
-                  loading || suggestions.length > 0
-                    ? "border border-gray-300"
-                    : ""
-                }`}
-              >
-                {loading && <div className="p-2 text-gray-400">Loading...</div>}
-
-                {suggestions.map((suggestion, idx) => (
-                  <div
-                    {...getSuggestionItemProps(suggestion, {
-                      className: `p-2 cursor-pointer ${
-                        suggestion.active ? "bg-red-100" : "bg-white"
-                      }`,
-                    })}
-                    key={idx}
-                  >
-                    {suggestion.description}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </PlacesAutocomplete>
-        {error && <p className="text-sm text-red-500">{error}</p>}
-        {detected && (
-          <div className="mt-6">
-            <GoogleMap
-              center={detected}
-              zoom={14}
-              mapContainerStyle={{
-                width: "100%",
-                height: "300px",
-                borderRadius: "8px",
-              }}
-              options={{
-                disableDefaultUI: true,
-                draggable: false,
-                scrollwheel: false,
-                disableDoubleClickZoom: true,
-                keyboardShortcuts: false,
-              }}
+        {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+          <div className="space-y-1">
+            <input
+              {...getInputProps({
+                placeholder: "Enter location",
+                className: `w-full p-3 border rounded-md focus:outline-none transition border-gray-300 ${
+                  error ? "border-red-500" : "border-gray-300"
+                }`,
+              })}
+            />
+            <div
+              className={`bg-white rounded-md ${
+                loading || suggestions.length > 0
+                  ? "border border-gray-300"
+                  : ""
+              }`}
             >
-              <Marker position={detected} />
-            </GoogleMap>
+              {loading && <div className="p-2 text-gray-400">Loading...</div>}
+
+              {suggestions.map((suggestion, idx) => (
+                <div
+                  {...getSuggestionItemProps(suggestion, {
+                    className: `p-2 cursor-pointer ${
+                      suggestion.active ? "bg-red-100" : "bg-white"
+                    }`,
+                  })}
+                  key={idx}
+                >
+                  {suggestion.description}
+                </div>
+              ))}
+            </div>
           </div>
         )}
-      </LoadScript>
+      </PlacesAutocomplete>
+      {error && <p className="text-sm text-red-500">{error}</p>}
+      {detected && (
+        <div className="mt-6">
+          <GoogleMap
+            center={detected}
+            zoom={14}
+            mapContainerStyle={{
+              width: "100%",
+              height: "300px",
+              borderRadius: "8px",
+            }}
+            options={{
+              disableDefaultUI: true,
+              draggable: false,
+              scrollwheel: false,
+              disableDoubleClickZoom: true,
+              keyboardShortcuts: false,
+            }}
+          >
+            <Marker position={detected} />
+          </GoogleMap>
+        </div>
+      )}
     </div>
   );
 };

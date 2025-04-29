@@ -50,6 +50,8 @@ model Ad {
   paymentOption String
   subcategoryId String
   subcategory   Subcategory @relation(fields: [subcategoryId], references: [id])
+  modifiedAt    DateTime?
+  modifiedBy    String?
 
   @@index([createdBy])
 }

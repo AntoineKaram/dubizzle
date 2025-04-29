@@ -1,5 +1,5 @@
 @import "tailwindcss";
-
+@import "keen-slider/keen-slider.min.css";
 @import "uploadthing/tw/v4";
 @theme {
   --color-app: #f1f5f9;

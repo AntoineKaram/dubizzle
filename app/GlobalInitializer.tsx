@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setCategories } from "@/store/settingsSlice";
 import { api } from "@/lib/axios";
+import { LoadScript } from "@react-google-maps/api";
 
 const GlobalInitializer: React.FC = () => {
   const dispatch = useDispatch();
@@ -21,6 +22,11 @@ const GlobalInitializer: React.FC = () => {
     loadSettings();
   }, [dispatch]);
 
-  return null;
+  return (
+    <LoadScript
+      googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
+      libraries={["places"]}
+    ></LoadScript>
+  );
 };
 export default GlobalInitializer;

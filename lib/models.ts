@@ -16,9 +16,23 @@ type Ad = {
   id: string;
   title: string;
   price: number;
-  status: "PENDING" | "APPROVED" | "REJECTED";
   createdAt: Date;
+  status: AdStatus;
+  image: string;
 };
+
+interface DetailedAd extends Ad {
+  location: string;
+  description: string;
+  paymentOption: string;
+  images: string[];
+  subcategory: {
+    name: string;
+    category: { name: string };
+  };
+  user?: { name: string };
+  createdBy: string;
+}
 
 type Subcategory = {
   id: string;
@@ -32,9 +46,10 @@ type Category = {
   subcategories: Subcategory[];
 };
 
+type AdStatus = "PENDING" | "APPROVED" | "REJECTED";
 enum Role {
   USER = "USER",
   MODERATOR = "MODERATOR",
 }
 
-export type { User, Role, Ad, Subcategory, Category };
+export type { Ad, Role, User, Category, AdStatus, DetailedAd, Subcategory };

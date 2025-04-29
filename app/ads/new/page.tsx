@@ -21,6 +21,8 @@ export default function NewAdPage() {
   const { categories, paymentOptions } = useSelector(
     (s: RootState) => s.settings
   );
+
+  const [error, setError] = useState<string>("");
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
   const [selectedSubcategoryId, setSelectedSubcategoryId] =
     useState<string>("");
@@ -42,7 +44,7 @@ export default function NewAdPage() {
       router.push("/profile");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
-      alert(e.response?.data?.message || "Failed to post ad");
+      setError(e.response?.data?.message || "Failed to post ad");
     }
   }, []);
 
@@ -235,6 +237,7 @@ export default function NewAdPage() {
             )}
           </div>
 
+          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
           <Button type="submit" loading={isSubmitting} className="w-full">
             {isSubmitting ? "Posting…" : "Post Ad"}
           </Button>
