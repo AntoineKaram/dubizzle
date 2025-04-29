@@ -36,4 +36,5 @@ enum Role {
   USER = "USER",
   MODERATOR = "MODERATOR",
 }
+
 export type { User, Role, Ad, Subcategory, Category };

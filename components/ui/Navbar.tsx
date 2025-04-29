@@ -1,10 +1,10 @@
-'use client'
-
-import Link from 'next/link'
-import { useSession } from 'next-auth/react'
+"use client";
+import React from "react";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 export default function Navbar() {
-  const { data: session } = useSession()
+  const { data: session } = useSession();
 
   return (
     <nav className="w-full bg-white shadow-sm p-4 flex justify-between items-center ">
@@ -14,20 +14,29 @@ export default function Navbar() {
 
       <div className="flex gap-4 items-center">
         {session?.user ? (
-            <Link href="/profile" className="text-gray-700 hover:text-red-600 font-semibold">
-              My Profile
-            </Link>
+          <Link
+            href="/profile"
+            className="text-gray-700 hover:text-red-600 font-semibold"
+          >
+            My Profile
+          </Link>
         ) : (
           <>
-            <Link href="/login" className="text-gray-700 hover:text-red-600 font-semibold">
+            <Link
+              href="/login"
+              className="text-gray-700 hover:text-red-600 font-semibold"
+            >
               Login
             </Link>
-            <Link href="/register" className="text-gray-700 hover:text-red-600 font-semibold">
+            <Link
+              href="/register"
+              className="text-gray-700 hover:text-red-600 font-semibold"
+            >
               Register
             </Link>
           </>
         )}
       </div>
     </nav>
-  )
+  );
 }

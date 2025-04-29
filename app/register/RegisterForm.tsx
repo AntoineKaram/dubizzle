@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/axios";
 import Input from "@/components/ui/Input";
@@ -52,6 +52,7 @@ const RegisterForm: React.FC = () => {
       emailRef.current!.value = "";
       passwordRef.current!.value = "";
       setTimeout(() => router.push("/login"), 1500);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.response?.data || "Something went wrong");
     } finally {

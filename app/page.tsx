@@ -1,3 +1,4 @@
+import React from "react";
 import Button from "@/components/ui/Button";
 import { getCurrentUser } from "@/lib/auth";
 
@@ -5,7 +6,6 @@ export default async function HomePage() {
   const user = await getCurrentUser();
 
   return (
-    
     <div className="flex flex-col items-center justify-center min-h-215 bg-white px-4">
       <div className="text-center space-y-6 max-w-2xl">
         <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
@@ -14,9 +14,7 @@ export default async function HomePage() {
 
         {user ? (
           <>
-            <p className="text-gray-600 text-lg">
-              Welcome, {user.name} 👋
-            </p>
+            <p className="text-gray-600 text-lg">Welcome, {user.name} 👋</p>
             <div className="flex gap-4 justify-center mt-6">
               <Button href="/profile">Go to Profile</Button>
               <Button href="/ads/new" variant="secondary">

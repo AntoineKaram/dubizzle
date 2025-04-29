@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { Ad } from "@/lib/models";
 import dayjs from "dayjs";
 
@@ -16,7 +17,7 @@ export default function MyAds({ ads }: MyAdsProps) {
 
       {ads.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-40 text-gray-400 border-2 border-dashed rounded-lg">
-          <p className="text-lg">You haven't posted any ads yet.</p>
+          <p className="text-lg">You haven&apos;t posted any ads yet.</p>
           <p className="text-sm mt-2">Start by creating your first ad!</p>
         </div>
       ) : (

@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { User } from "@/lib/models";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";

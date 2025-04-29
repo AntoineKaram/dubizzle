@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 import AnimatedBackground from "./AnimatedBackground";
 
 interface PageWrapperProps {
@@ -17,7 +17,9 @@ export default function PageWrapper({
       className={`min-h-215 flex items-center justify-center bg-app px-4 ${className}`}
     >
       <AnimatedBackground />
-      <div className="relative z-10 p-6 w-screen flex justify-center">{children}</div>
+      <div className="relative z-10 p-6 w-screen flex justify-center">
+        {children}
+      </div>
     </div>
   );
 }

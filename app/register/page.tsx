@@ -1,3 +1,5 @@
+
+import React from "react";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import RegisterForm from "./RegisterForm";

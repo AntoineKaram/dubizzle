@@ -1,8 +1,4 @@
 import { NextResponse } from "next/server";
-import path from "path";
-import { v4 as uuidv4 } from "uuid";
-import { writeFile } from "fs/promises";
-
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 
 type Variant = "info" | "success" | "warning" | "error";
 

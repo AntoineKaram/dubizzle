@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { useForm, Controller } from "react-hook-form";
@@ -36,14 +36,15 @@ export default function NewAdPage() {
     resolver: zodResolver(adFormSchema),
   });
 
-  const onSubmit = async (data: AdFormValues) => {
+  const onSubmit = useCallback(async (data: AdFormValues) => {
     try {
       await api.post("/api/ads/create", data);
       router.push("/profile");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       alert(e.response?.data?.message || "Failed to post ad");
     }
-  };
+  }, []);
 
   return (
     <PageWrapper>

@@ -1,6 +1,6 @@
 "use client";
 
-import { ButtonHTMLAttributes } from "react";
+import React, { ButtonHTMLAttributes } from "react";
 import Link from "next/link";
 import { FaSpinner } from "react-icons/fa";
 

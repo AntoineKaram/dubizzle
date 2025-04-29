@@ -1,5 +1,5 @@
 "use client";
-
+import React from "react";
 import { FaCloudUploadAlt, FaCamera } from "react-icons/fa";
 import { UploadDropzone } from "@/components/uploadthing";
 import { ClientUploadedFileData } from "uploadthing/types";
@@ -14,7 +14,6 @@ export const UploadGrid: React.FC<UploadGridProps> = ({
   onChange,
   max = 5,
 }) => {
-    
   const handleUpload = (files: ClientUploadedFileData<null>[]) => {
     const incoming = files.map((f) => f.ufsUrl);
     const merged = [...value, ...incoming].slice(0, max);
@@ -39,7 +38,7 @@ export const UploadGrid: React.FC<UploadGridProps> = ({
                 uploadIcon: () => (
                   <FaCloudUploadAlt className="w-8 h-8 text-gray-400 mt-8" />
                 ),
-                allowedContent({ ready, fileTypes, isUploading }) {
+                allowedContent({ ready, isUploading }) {
                   if (!ready) return "loading...";
                   if (isUploading) return "uploading..";
                   return "";

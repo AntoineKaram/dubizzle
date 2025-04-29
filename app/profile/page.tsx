@@ -1,3 +1,4 @@
+import React from "react";
 import { redirect } from "next/navigation";
 import { getEnrichedUser } from "@/lib/auth";
 import PageWrapper from "@/components/ui/PageWrapper";
