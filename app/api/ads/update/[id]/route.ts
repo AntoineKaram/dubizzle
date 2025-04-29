@@ -12,17 +12,16 @@ const updateAdSchema = z.object({
   images: z.array(z.string().url()).min(1).max(5),
 });
 
-interface Params {
-  params: { id: string };
-}
-
-export async function PUT(request: Request, { params }: Params) {
+export async function PUT(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const user = await getCurrentUser();
   if (!user) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
-  const adId = params.id;
+  const { id: adId } = await params;
 
   try {
     const existingAd = await prisma.ad.findUnique({

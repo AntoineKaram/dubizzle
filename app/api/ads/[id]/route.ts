@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 import { getAdById } from "@/lib/helper";
 
-interface Params {
-  params: { id: string };
-}
-
-export async function GET(req: Request, { params }: Params) {
-  const { id } = params;
+export async function GET(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
 
   try {
     const ad = await getAdById(id);

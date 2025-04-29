@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+
 import { getAdById } from "@/lib/helper";
 import { getCurrentUser } from "@/lib/auth";
 
@@ -7,11 +8,11 @@ import PageWrapper from "@/components/ui/PageWrapper";
 import AdEditForm from "./AdEditForm";
 import AdDetailView from "./AdDetailView";
 
-interface PageProps {
-  params: { id: string };
-}
-
-export default async function AdDetailPage({ params }: PageProps) {
+export default async function AdDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const user = await getCurrentUser();
   const { id: adId } = await params;
   const ad = await getAdById(adId);
