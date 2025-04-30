@@ -19,6 +19,8 @@ export function mapApiAdToDetailedAd(apiAd: any): DetailedAd {
     },
     user: apiAd.user ? { name: apiAd.user.name } : undefined,
     createdBy: apiAd.user ? apiAd.user.id : undefined,
+    modifiedAt: apiAd.modifiedAt,
+    modifiedBy: apiAd.modifiedBy,
     image: apiAd.images.length > 0 ? apiAd.images[0] : "",
   };
 }
@@ -31,5 +33,6 @@ export function mapApiAdsToLightAds(apiAds: any[]): Ad[] {
     location: apiAd.location,
     createdAt: new Date(apiAd.createdAt),
     image: apiAd.images.length > 0 ? apiAd.images[0] : "",
+    user: apiAd.user ? { name: apiAd.user.name } : undefined,
   }));
 }

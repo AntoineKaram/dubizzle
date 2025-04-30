@@ -36,6 +36,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.25.1",
+    "@faker-js/faker": "^9.7.0",
     "@tailwindcss/postcss": "^4.1.4",
     "@types/react-places-autocomplete": "^7.2.14",
     "autoprefixer": "^10.4.21",

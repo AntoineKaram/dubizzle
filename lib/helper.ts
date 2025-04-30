@@ -67,6 +67,10 @@ export async function getAdById(id: string): Promise<DetailedAd | null> {
       location: true,
       paymentOption: true,
       images: true,
+      status: true,
+      createdBy: true,
+      modifiedAt: true,
+      modifiedBy: true,
       createdAt: true,
       subcategory: {
         select: {
@@ -88,6 +92,47 @@ export async function getAdById(id: string): Promise<DetailedAd | null> {
   if (!ad) {
     return null;
   }
+  if (ad.modifiedBy) {
+    const user = await prisma.user.findUnique({
+      where: { id: ad.modifiedBy },
+      select: {
+        name: true,
+      },
+    });
+    ad.modifiedBy = user?.name ?? ad.modifiedBy;
+  }
 
   return mapApiAdToDetailedAd(ad);
+}
+
+export async function getPendingAds(
+  userId: string,
+  sortField: string,
+  sortDirection: string,
+  offset: number,
+  limit: number
+): Promise<{ ads: DetailedAd[]; total: number }> {
+  const data = await prisma.ad.findMany({
+    where: {
+      status: "PENDING",
+      NOT: { createdBy: userId },
+    },
+    orderBy: {
+      [sortField]: sortDirection,
+    },
+    skip: offset,
+    take: limit,
+    include: {
+      subcategory: { include: { category: true } },
+      user: { select: { name: true } },
+    },
+  });
+  const total = await prisma.ad.count({
+    where: {
+      status: "PENDING",
+      NOT: { createdBy: userId },
+    },
+  });
+  const ads = data.map((ad) => mapApiAdToDetailedAd(ad));
+  return { ads, total };
 }

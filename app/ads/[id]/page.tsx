@@ -7,6 +7,7 @@ import PageWrapper from "@/components/ui/PageWrapper";
 
 import AdEditForm from "./AdEditForm";
 import AdDetailView from "./AdDetailView";
+import ModeratorPanel from "./ModeratorPanel";
 
 export default async function AdDetailPage({
   params,
@@ -26,7 +27,10 @@ export default async function AdDetailPage({
       {isOwner ? (
         <AdEditForm ad={ad} />
       ) : isModerator ? (
-        <div>Moderator panel coming soon</div>
+        <div className="space-y-6">
+          <ModeratorPanel adId={ad.id} currentStatus={ad.status} />
+          <AdDetailView ad={ad} />
+        </div>
       ) : (
         <AdDetailView ad={ad} />
       )}

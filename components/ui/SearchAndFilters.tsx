@@ -34,7 +34,7 @@ export default function SearchAndFilters({
   useEffect(() => {
     setFilters((f: any) => ({ ...f, q: search }));
     onFilter();
-  }, [search]);
+  }, [debouncedValue]);
 
   return (
     <div className="flex items-center justify-between relative mb-8">
