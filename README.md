@@ -1,73 +1,129 @@
-# Dubizzle - Platform
+#  Dubizzle Demo (Next.js + Prisma + NextAuth)
 
-A full-stack classifieds web application built with **Next.js**, **PostgreSQL**, and **Prisma**.  
-Developed as part of the Dubizzle Lebanon **Senior Full Stack Developer Assessment**.
+This is a full-stack classified ads platform inspired by Dubizzle, built with:
 
----
-
-## 🚀 Features
-
-- User Authentication (NextAuth, secure password hashing)
-- Profile Management
-  - Edit name, address, and profile picture
-  - Upload profile images to external blob storage (UploadThing)
-- Post New Ad (Coming soon)
-  - Title, Description, Price, Images
-- Animated Lottie Background for modern UX
-- Responsive UI with TailwindCSS
-- Server-side Validation and Client-side Validation
-- Fully deployed on Vercel
+-  Next.js App Router (v15)
+-  TypeScript & TailwindCSS
+-  NextAuth.js for authentication
+-  Prisma + PostgreSQL
+-  UploadThing for image upload
+-  Server-side filtering, pagination, role-based access control
 
 ---
 
-## 🛠 Tech Stack
+##  Tech Stack
 
-- **Frontend:** Next.js 14 (App Router), TailwindCSS
-- **Backend:** Next.js API Routes, Prisma ORM
-- **Authentication:** NextAuth.js
-- **Storage:** UploadThing (Blob Storage for images)
-- **Database:** PostgreSQL (via Railway or Neon)
-- **Deployment:** Vercel
+| Layer         | Tool/Library            |
+|---------------|--------------------------|
+| Frontend      | Next.js App Router, TailwindCSS |
+| Backend       | Next.js API Routes, Prisma |
+| Auth          | NextAuth.js + JWT        |
+| DB            | PostgreSQL               |
+| Uploads       | UploadThing              |
+| Deployment    | Vercel                   |
 
 ---
 
-## 📦 Setup Instructions
+##  Features
 
-1. **Clone the repository**
+###  Authentication
 
-```bash
-git clone https://github.com/your-username/dubizzle.git
-cd dubizzle
-```
+- Register, login, and protected routes
+- Role-based access: `USER` / `MODERATOR`
+- NextAuth + JWT session
 
-2. **Install dependencies**
+###  Ads Management
 
-```bash
-npm install
-```
+- Post ads with title, description, location, images, category, subcategory
+- Upload up to 5 images per ad (UploadThing)
+- Google Maps location + address autocomplete
+- Responsive Ad forms with client-side validation
 
-3. **Setup environment variables**
-   Create a .env file based on .env.example:
+###  View / Edit Ads
 
-```env
-# Database
-DATABASE_URL=your_postgres_db_url
+- Public ad detail page with image carousel
+- If the viewer is the creator: editable form
+- If not: read-only detail view
+- Moderator review panel if role is `MODERATOR`
 
-# NextAuth
-NEXTAUTH_SECRET=your_random_secret
+###  Moderator Tools
 
-# UploadThing
-UPLOADTHING_TOKEN=your_uploadthing_secret
-```
+- `/moderation` dashboard to review pending ads
+- Approve / Reject via in-place panel
+- Sorting, pagination, exclusion of own ads
 
-4. **Run Prisma migrations**
+###  Homepage + Browsing
 
-```bash
-npx prisma migrate dev --name init
-```
+- `/` lists all approved ads
+- Server-side filtering: search, category, subcategory, price range
+- Pagination with "Load More"
+- Debounced search input
+- Responsive grid of ads
 
-5. **Start the development server**
+---
 
-```bash
-npm run dev
-```
+##  Folder Structure
+  ```
+  app/ 
+  ├─ ads/ 
+  │ └─ [id]/page.tsx 
+  ├─ moderation/ 
+  ├─ profile/ 
+  ├─ api/ 
+  │ ├─ ads/ 
+  │ │ ├─ create/ 
+  │ │ ├─ update/[id]/ 
+  │ │ ├─ review/[id]/ 
+  │ │ └─ route.ts 
+  │ ├─ auth/... 
+  ├─ components/ 
+  ├─ lib/ 
+  │ ├─ prisma.ts 
+  │ ├─ auth.ts 
+  │ └─ models.ts 
+  ├─ store/
+  ```
+---
+
+##  Local Setup
+
+1. **Clone the repo**  
+2. Install deps:
+
+  ```bash
+  npm install
+  ```
+3. Setup your `.env` file:
+  ```env
+  DATABASE_URL=postgresql://user:password@localhost:5432/dubizzle
+  NEXTAUTH_SECRET=...
+  UPLOADTHING_TOKEN=...
+  NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=...
+  NEXTAUTH_URL=http://localhost:3000
+  ```
+4. Migrate the DB  (seed optional) 
+  ```bash
+  npx prisma migrate dev --name init
+  npx tsx prisma/seed.ts
+  ```
+5. Start dev server
+  ```bash
+  npm run dev
+  ```
+---
+
+##  Roles
+You can assign `role: "MODERATOR"` in the database manually or via seed script.
+
+## Protected Routes
+| Path              | Role         | Access   |
+|-------------------|--------------|----------|
+| `/ads/new`        | Authenticated user | ✅ |
+| `/profile`        | Authenticated user | ✅ |
+| `/ads/:id`        | All           | View/Edit/Review depends on user |
+| `/moderation`     | Moderator only | ✅ |
+| `/api/...`        | Validated by token + role | ✅ |
+
+## Credits
+Built by Antoine Karam, as a technical assignment demo.
+Inspired by platforms like Dubizzle, OLX, Airbnb.
