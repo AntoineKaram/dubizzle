@@ -4,14 +4,14 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const user = await getCurrentUser();
   if (!user || user.role !== "MODERATOR") {
     return NextResponse.json({ message: "Forbidden" }, { status: 403 });
   }
-
-  const adId = params.id;
+  
+  const { id: adId } = await params;
   const { status } = await req.json();
 
   if (!["APPROVED", "REJECTED"].includes(status)) {
