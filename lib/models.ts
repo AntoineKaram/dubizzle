@@ -32,6 +32,8 @@ interface DetailedAd extends Ad {
   };
   user?: { name: string };
   createdBy: string;
+  modifiedAt: string;
+  modifiedBy: string;
 }
 
 type Subcategory = {

@@ -14,7 +14,7 @@ export default function PageWrapper({
 }: PageWrapperProps) {
   return (
     <div
-      className={`min-h-215 flex items-center justify-center bg-app px-4 ${className}`}
+      className={`min-h-215 flex items-center justify-center bg-app pt-16 px-4 ${className}`}
     >
       <AnimatedBackground />
       <div className="relative z-10 p-6 w-screen flex justify-center">
