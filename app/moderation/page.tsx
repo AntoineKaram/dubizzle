@@ -2,7 +2,7 @@
 import { redirect } from "next/navigation";
 import { useSession } from "next-auth/react";
 
-import ModeratorPage from "./ModeratorePage";
+import ModeratorPage from "./ModeratorPage";
 import PageWrapper from "@/components/ui/PageWrapper";
 
 export default function page() {
