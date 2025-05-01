@@ -8,18 +8,19 @@ datasource db {
 }
 
 model User {
-  id         String    @id @default(uuid())
-  email      String    @unique
-  password   String
-  name       String
-  address    String?
-  profilePic String?
-  role       Role      @default(USER)
-  ads        Ad[]
-  createdAt  DateTime  @default(now())
-  createdBy  String?
-  modifiedAt DateTime? @updatedAt
-  modifiedBy String?
+  id            String          @id @default(uuid())
+  email         String          @unique
+  password      String
+  name          String
+  address       String?
+  profilePic    String?
+  role          Role            @default(USER)
+  ads           Ad[]
+  createdAt     DateTime        @default(now())
+  createdBy     String?
+  modifiedAt    DateTime?       @updatedAt
+  modifiedBy    String?
+  AdEditRequest AdEditRequest[]
 }
 
 model Category {
@@ -58,26 +59,21 @@ model Ad {
 }
 
 model AdEditRequest {
-  id            String     @id @default(cuid())
+  id            String   @id @default(uuid())
   adId          String
-  ad            Ad         @relation(fields: [adId], references: [id])
+  ad            Ad       @relation(fields: [adId], references: [id])
   title         String
   description   String
   price         Float
   location      String
   paymentOption String
   images        String[]
-  status        EditStatus @default(PENDING)
-  createdAt     DateTime   @default(now())
+  status        AdStatus @default(PENDING)
+  createdAt     DateTime @default(now())
   createdBy     String
+  user          User     @relation(fields: [createdBy], references: [id])
 
   @@index([adId])
-}
-
-enum EditStatus {
-  PENDING
-  APPROVED
-  REJECTED
 }
 
 enum Role {

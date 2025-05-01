@@ -35,9 +35,11 @@ export default function Navbar() {
         </Link>
         {pathname === "/" ? (
           user ? (
-            <p className="text-black  text-lg">Welcome, {user.name} 👋</p>
+            <p className="text-black  text-lg hidden md:flex">
+              Welcome, {user.name} 👋
+            </p>
           ) : (
-            <p className="text-black text-lg">
+            <p className="text-black text-lg hidden md:flex">
               Login now to post your own ads and manage your deals.
             </p>
           )

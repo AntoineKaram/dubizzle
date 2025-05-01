@@ -36,6 +36,13 @@ interface DetailedAd extends Ad {
   modifiedBy: string;
 }
 
+interface AdEditRequest
+  extends Omit<
+    DetailedAd,
+    "subcategory" | "user" | "modifiedAt" | "modifiedBy"
+  > {
+  originalAd: DetailedAd;
+}
 type Subcategory = {
   id: string;
   name: string;
@@ -54,4 +61,13 @@ enum Role {
   MODERATOR = "MODERATOR",
 }
 
-export type { Ad, Role, User, Category, AdStatus, DetailedAd, Subcategory };
+export type {
+  Ad,
+  Role,
+  User,
+  Category,
+  AdStatus,
+  DetailedAd,
+  Subcategory,
+  AdEditRequest,
+};
