@@ -37,23 +37,47 @@ model Subcategory {
 }
 
 model Ad {
-  id            String      @id @default(uuid())
+  id            String          @id @default(uuid())
   title         String
   description   String
   price         Float
   location      String
-  images        String[]    @default([])
-  status        AdStatus    @default(PENDING)
-  createdAt     DateTime    @default(now())
+  images        String[]        @default([])
+  status        AdStatus        @default(PENDING)
+  createdAt     DateTime        @default(now())
   createdBy     String
-  user          User        @relation(fields: [createdBy], references: [id])
+  user          User            @relation(fields: [createdBy], references: [id])
   paymentOption String
   subcategoryId String
-  subcategory   Subcategory @relation(fields: [subcategoryId], references: [id])
+  subcategory   Subcategory     @relation(fields: [subcategoryId], references: [id])
   modifiedAt    DateTime?
   modifiedBy    String?
+  AdEditRequest AdEditRequest[]
 
   @@index([createdBy])
+}
+
+model AdEditRequest {
+  id            String     @id @default(cuid())
+  adId          String
+  ad            Ad         @relation(fields: [adId], references: [id])
+  title         String
+  description   String
+  price         Float
+  location      String
+  paymentOption String
+  images        String[]
+  status        EditStatus @default(PENDING)
+  createdAt     DateTime   @default(now())
+  createdBy     String
+
+  @@index([adId])
+}
+
+enum EditStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 enum Role {

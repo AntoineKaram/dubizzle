@@ -40,7 +40,11 @@ const AdEditForm: React.FC<Props> = ({ ad }) => {
 
   const onSubmit = useCallback(async (data: EditAdFormValues) => {
     try {
-      await api.put(`/api/ads/update/${ad.id}`, data);
+      if (ad.status === "APPROVED") {
+        await api.post(`/api/ads/edit-request/${ad.id}`, data);
+      } else {
+        await api.put(`/api/ads/update/${ad.id}`, data);
+      }
       router.push("/profile");
     } catch (err: any) {
       setError(err.response?.data?.message || "Update failed");
