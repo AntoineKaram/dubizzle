@@ -17,14 +17,14 @@ const editSchema = z.object({
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const user = await getCurrentUser();
   if (!user) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
-  const adId = params.id;
+  const { id: adId } = await params;
   const ad = await prisma.ad.findUnique({ where: { id: adId } });
 
   if (!ad || ad.createdBy !== user.id) {
