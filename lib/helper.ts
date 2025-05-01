@@ -1,6 +1,10 @@
 import { prisma } from "@/lib/prisma";
-import { Ad, DetailedAd } from "@/lib/models";
-import { mapApiAdsToLightAds, mapApiAdToDetailedAd } from "./mapper";
+import { Ad, AdEditRequest, DetailedAd } from "@/lib/models";
+import {
+  mapApiAdsToLightAds,
+  mapApiAdToAdEditRequest,
+  mapApiAdToDetailedAd,
+} from "./mapper";
 
 export async function getAllApprovedAds(
   q: string,
@@ -103,6 +107,21 @@ export async function getAdById(id: string): Promise<DetailedAd | null> {
   }
 
   return mapApiAdToDetailedAd(ad);
+}
+export async function getPendingAdDetailsByAdId(
+  adId: string
+): Promise<AdEditRequest | null> {
+  const editRequest = await prisma.adEditRequest.findFirst({
+    where: { adId: adId, status: "PENDING" },
+    include: {
+      ad: true,
+    },
+  });
+  if (!editRequest) {
+    return null;
+  }
+  const ads = mapApiAdToAdEditRequest([editRequest]);
+  return ads[0];
 }
 
 export async function getPendingAds(

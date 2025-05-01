@@ -1,15 +1,18 @@
-"use client"
-import { redirect } from "next/navigation";
+"use client";
+import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
-import ModeratorPage from "./ModeratorePage";
+import ModeratorPage from "./ModeratorPage";
 import PageWrapper from "@/components/ui/PageWrapper";
 
 export default function page() {
+  const router = useRouter();
   const { data: session } = useSession();
+
   const user = session?.user;
   if (!user || user.role !== "MODERATOR") {
-    redirect("/login");
+    router.push("/login");
+    return <PageWrapper>Access Denied</PageWrapper>;
   }
   return (
     <PageWrapper>

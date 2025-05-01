@@ -1,4 +1,5 @@
-import { Ad, DetailedAd } from "@/lib/models";
+import { Ad, AdEditRequest, DetailedAd } from "@/lib/models";
+import { AdEditRequest as APIEditRequest, Ad as APIAd } from "@prisma/client";
 
 export function mapApiAdToDetailedAd(apiAd: any): DetailedAd {
   return {
@@ -34,5 +35,24 @@ export function mapApiAdsToLightAds(apiAds: any[]): Ad[] {
     createdAt: new Date(apiAd.createdAt),
     image: apiAd.images.length > 0 ? apiAd.images[0] : "",
     user: apiAd.user ? { name: apiAd.user.name } : undefined,
+  }));
+}
+
+export function mapApiAdToAdEditRequest(
+  apiAds: ({ ad: APIAd } & APIEditRequest)[]
+): AdEditRequest[] {
+  return apiAds.map((apiAd) => ({
+    id: apiAd.id,
+    title: apiAd.title,
+    price: apiAd.price,
+    status: apiAd.status,
+    location: apiAd.location,
+    createdAt: new Date(apiAd.createdAt),
+    image: apiAd.images.length > 0 ? apiAd.images[0] : "",
+    createdBy: apiAd.createdBy,
+    description: apiAd.description,
+    images: apiAd.images,
+    paymentOption: apiAd.paymentOption,
+    originalAd: mapApiAdToDetailedAd(apiAd.ad),
   }));
 }

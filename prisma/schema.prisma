@@ -8,18 +8,19 @@ datasource db {
 }
 
 model User {
-  id         String    @id @default(uuid())
-  email      String    @unique
-  password   String
-  name       String
-  address    String?
-  profilePic String?
-  role       Role      @default(USER)
-  ads        Ad[]
-  createdAt  DateTime  @default(now())
-  createdBy  String?
-  modifiedAt DateTime? @updatedAt
-  modifiedBy String?
+  id            String          @id @default(uuid())
+  email         String          @unique
+  password      String
+  name          String
+  address       String?
+  profilePic    String?
+  role          Role            @default(USER)
+  ads           Ad[]
+  createdAt     DateTime        @default(now())
+  createdBy     String?
+  modifiedAt    DateTime?       @updatedAt
+  modifiedBy    String?
+  AdEditRequest AdEditRequest[]
 }
 
 model Category {
@@ -37,23 +38,42 @@ model Subcategory {
 }
 
 model Ad {
-  id            String      @id @default(uuid())
+  id            String          @id @default(uuid())
   title         String
   description   String
   price         Float
   location      String
-  images        String[]    @default([])
-  status        AdStatus    @default(PENDING)
-  createdAt     DateTime    @default(now())
+  images        String[]        @default([])
+  status        AdStatus        @default(PENDING)
+  createdAt     DateTime        @default(now())
   createdBy     String
-  user          User        @relation(fields: [createdBy], references: [id])
+  user          User            @relation(fields: [createdBy], references: [id])
   paymentOption String
   subcategoryId String
-  subcategory   Subcategory @relation(fields: [subcategoryId], references: [id])
+  subcategory   Subcategory     @relation(fields: [subcategoryId], references: [id])
   modifiedAt    DateTime?
   modifiedBy    String?
+  AdEditRequest AdEditRequest[]
 
   @@index([createdBy])
+}
+
+model AdEditRequest {
+  id            String   @id @default(uuid())
+  adId          String
+  ad            Ad       @relation(fields: [adId], references: [id])
+  title         String
+  description   String
+  price         Float
+  location      String
+  paymentOption String
+  images        String[]
+  status        AdStatus @default(PENDING)
+  createdAt     DateTime @default(now())
+  createdBy     String
+  user          User     @relation(fields: [createdBy], references: [id])
+
+  @@index([adId])
 }
 
 enum Role {

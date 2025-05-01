@@ -1,129 +1,149 @@
-#  Dubizzle Demo (Next.js + Prisma + NextAuth)
+# 🏠 Dubizzle Demo (Next.js + Prisma + NextAuth)
 
-This is a full-stack classified ads platform inspired by Dubizzle, built with:
+This is a full-stack classifieds platform inspired by Dubizzle, built with modern tech:
 
--  Next.js App Router (v15)
--  TypeScript & TailwindCSS
--  NextAuth.js for authentication
--  Prisma + PostgreSQL
--  UploadThing for image upload
--  Server-side filtering, pagination, role-based access control
-
----
-
-##  Tech Stack
-
-| Layer         | Tool/Library            |
-|---------------|--------------------------|
-| Frontend      | Next.js App Router, TailwindCSS |
-| Backend       | Next.js API Routes, Prisma |
-| Auth          | NextAuth.js + JWT        |
-| DB            | PostgreSQL               |
-| Uploads       | UploadThing              |
-| Deployment    | Vercel                   |
+- **Next.js App Router (v15)** + TypeScript
+- **Tailwind CSS** for styling
+- **Prisma + PostgreSQL** as the data layer
+- **NextAuth.js** for authentication and roles
+- **UploadThing** for image uploads
+- **Google Maps + Places API** for location
 
 ---
 
-##  Features
+## 🚀 Features
 
-###  Authentication
+### ✅ Authentication & Authorization
+- User registration & login (NextAuth)
+- Role-based access: `USER` vs `MODERATOR`
+- Protected routes and actions
 
-- Register, login, and protected routes
-- Role-based access: `USER` / `MODERATOR`
-- NextAuth + JWT session
+### ✅ Ad Management
+- Create ads with title, description, images, price, category, subcategory, location
+- Google Maps + address autocomplete
+- Upload multiple images (UploadThing)
+- Preview uploaded images in-place
+- Client-side form validation (refs + state)
 
-###  Ads Management
+### ✅ Edit Ad (Live vs Moderated)
+- Users can update ads
+- If ad is `APPROVED`, edit goes to moderation queue
+- Original stays live while edit awaits approval
 
-- Post ads with title, description, location, images, category, subcategory
-- Upload up to 5 images per ad (UploadThing)
-- Google Maps location + address autocomplete
-- Responsive Ad forms with client-side validation
+### ✅ Moderation Flow
+- `/moderation` dashboard for moderators
+- Tabs: Pending Ads & Pending Edit Requests
+- Moderators can:
+  - Approve/reject new ads
+  - Review edits and apply changes to live ads
 
-###  View / Edit Ads
-
-- Public ad detail page with image carousel
-- If the viewer is the creator: editable form
-- If not: read-only detail view
-- Moderator review panel if role is `MODERATOR`
-
-###  Moderator Tools
-
-- `/moderation` dashboard to review pending ads
-- Approve / Reject via in-place panel
-- Sorting, pagination, exclusion of own ads
-
-###  Homepage + Browsing
-
-- `/` lists all approved ads
-- Server-side filtering: search, category, subcategory, price range
-- Pagination with "Load More"
-- Debounced search input
-- Responsive grid of ads
+### ✅ Public Browsing
+- Homepage lists all `APPROVED` ads
+- Search by keyword (debounced)
+- Filter by category, subcategory, price range
+- Load More pagination
 
 ---
 
-##  Folder Structure
-  ```
-  app/ 
-  ├─ ads/ 
-  │ └─ [id]/page.tsx 
-  ├─ moderation/ 
-  ├─ profile/ 
-  ├─ api/ 
-  │ ├─ ads/ 
-  │ │ ├─ create/ 
-  │ │ ├─ update/[id]/ 
-  │ │ ├─ review/[id]/ 
-  │ │ └─ route.ts 
-  │ ├─ auth/... 
-  ├─ components/ 
-  ├─ lib/ 
-  │ ├─ prisma.ts 
-  │ ├─ auth.ts 
-  │ └─ models.ts 
-  ├─ store/
-  ```
+## 🧱 Tech Stack
+
+| Area        | Tech                             |
+|-------------|----------------------------------|
+| Frontend    | Next.js App Router, Tailwind CSS |
+| Backend     | Next.js API routes, Prisma       |
+| Auth        | NextAuth.js + JWT                |
+| Uploads     | UploadThing                      |
+| Location    | Google Maps + Places Autocomplete|
+| DB          | PostgreSQL                       |
+| Icons       |  React Icons                     |
+| Deploy      | Vercel                           |
+
 ---
 
-##  Local Setup
+## 📁 Routes Folder Structure
 
-1. **Clone the repo**  
-2. Install deps:
+```
+└── 📁api
+    └── 📁ads
+        └── 📁[id]
+            └── route.ts                    -> GET ad by id
+        └── 📁create
+            └── route.ts                    -> POST ad
+        └── 📁edit-request
+            └── 📁[id]
+                └── route.ts                -> POST + PATCH edit request
+            └── route.ts                    -> GET edit requests
+        └── 📁pending
+            └── route.ts                    -> Get pending ads
+        └── 📁review
+            └── 📁[id]
+                └── route.ts                -> PATCH ad (update status)
+        └── route.ts                        -> GET all ads
+        └── 📁update
+            └── 📁[id]
+                └── route.ts                -> PUT ad 
+    └── 📁auth
+        └── 📁[...nextauth]
+            └── route.ts                    -> handle login
+        └── 📁register
+            └── route.ts                    -> handle sign up
+    └── 📁settings
+        └── route.ts                        -> Fetch site settings
+    └── 📁uploadthing
+        └── route.ts                        -> upload images
+    └── 📁user
+        └── 📁update
+            └── route.ts                    -> PUT user details
+```
 
-  ```bash
-  npm install
-  ```
-3. Setup your `.env` file:
-  ```env
-  DATABASE_URL=postgresql://user:password@localhost:5432/dubizzle
-  NEXTAUTH_SECRET=...
-  UPLOADTHING_TOKEN=...
-  NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=...
-  NEXTAUTH_URL=http://localhost:3000
-  ```
-4. Migrate the DB  (seed optional) 
-  ```bash
-  npx prisma migrate dev --name init
-  npx tsx prisma/seed.ts
-  ```
-5. Start dev server
-  ```bash
-  npm run dev
-  ```
 ---
 
-##  Roles
-You can assign `role: "MODERATOR"` in the database manually or via seed script.
+## 🛠️ Setup
 
-## Protected Routes
-| Path              | Role         | Access   |
-|-------------------|--------------|----------|
-| `/ads/new`        | Authenticated user | ✅ |
-| `/profile`        | Authenticated user | ✅ |
-| `/ads/:id`        | All           | View/Edit/Review depends on user |
-| `/moderation`     | Moderator only | ✅ |
-| `/api/...`        | Validated by token + role | ✅ |
+1. Clone and install:
+```bash
+git clone https://github.com/AntoineKaram/dubizzle
+cd dubizzle
+npm install
+```
 
-## Credits
-Built by Antoine Karam, as a technical assignment demo.
-Inspired by platforms like Dubizzle, OLX, Airbnb.
+2. Configure `.env`:
+```env
+DATABASE_URL=postgresql://user:password@localhost:5432/dubizzle
+NEXTAUTH_SECRET=...
+UPLOADTHING_TOKEN=...
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=...
+NEXTAUTH_URL=http://localhost:3000
+```
+
+3. Setup DB:
+```bash
+npm run migrate
+npm run generate
+npx tsx prisma/seed.ts
+```
+
+4. Run the app:
+```bash
+npm run dev
+```
+
+---
+
+## 🧑‍💻 Roles
+
+- `USER` → default
+- `MODERATOR` → assign manually via Prisma Studio: 
+
+```bash
+npx prisma studio
+```
+
+---
+
+
+## ✨ Credits
+
+Built by Antoine Karam for a Dubizzle-style technical assessment.
+Inspired by Dubizzle, OLX..
+
